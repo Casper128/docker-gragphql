@@ -17,6 +17,14 @@ jobs:
       uses: actions/checkout@v4
       with: 
         fecth-depth: 0
+    - name: Git Semantic Version
+      uses: PaulHatch/semantic-version@v5.4.0
+      with:  
+        major_pattern: "major:"
+        minor_pattern: "feat:"
+        version_format: "${major}.${minor}.${patch}-prerelease${increment}"
+      id: version
+        
     - name: Docker Login
       env:
        DOCKER_USER: ${{ secrets.DOCKER_USER }}
@@ -24,13 +32,17 @@ jobs:
       run: |
         docker login -u $DOCKER_USER  -p $DOCKER_PASS
     - name: Build Docker Image
+      env:
+       NEW_VERSION: ${{ steps.version.outputs.version }}
       run: | 
-         docker build -t bboycasper128/nest-graphql-dev:1.0.1 .
+         docker build -t bboycasper128/nest-graphql-dev:$NEW_VERSION .
          docker build -t bboycasper128/nest-graphql-dev:latest .
 
     - name: Push Docker Image
+      env:
+       NEW_VERSION: ${{ steps.version.outputs.version }}
       run: | 
-         docker push bboycasper128/nest-graphql-dev:1.0.1
+         docker push bboycasper128/nest-graphql-dev:$NEW_VERSION
          docker push bboycasper128/nest-graphql-dev:latest
        
     # - 
