@@ -29,7 +29,7 @@ jobs:
 
     - name: Push Docker Image
       run: | 
-         docker push bboycasper128/nest-graphql-dev:1.0.1 .
+         docker push bboycasper128/nest-graphql-dev:1.0.1
        
     # - 
     # - name: Build the Docker image
